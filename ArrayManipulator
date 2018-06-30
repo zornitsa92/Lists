@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace _05.ArrayManipulator
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<int> numbers = Console.ReadLine()
+                .Split(' ')
+                .Select(int.Parse)
+                .ToList();
+            
+            while (true)
+            {
+                string line = Console.ReadLine();
+
+                if (line == "print")
+                {                    
+                    Console.WriteLine("[{0}]", string.Join(", ", numbers));
+                    break;
+                }
+              
+                string[] tokens = line.Split();
+                string command = tokens[0];
+
+                int index;
+                int element;
+                switch (command)
+                {
+                    case "add":
+                        index = int.Parse(tokens[1]);
+                        element = int.Parse(tokens[2]);
+                        numbers.Insert(index, element);
+                        break;
+                    case "addMany":
+                        AddMany(numbers, tokens);
+                        break;
+                    case "contains":
+                        element = int.Parse(tokens[1]);
+                        index = numbers.IndexOf(element);
+                        Console.WriteLine(index);
+                        break;
+                    case "remove":
+                        index = int.Parse(tokens[1]);
+                        numbers.RemoveAt(index);
+                        break;
+                    case "shift":
+                        int rotations = int.Parse(tokens[1]);
+                        Shift(numbers, rotations);
+                        break;
+                    case "sumPairs":
+                        SumPairs(numbers);
+                        break;
+                }
+            }
+        }
+
+        private static void SumPairs(List<int> numbers)
+        {
+            for (int i = 0; i < numbers.Count - 1; i++)
+            {
+                numbers[i] += numbers[i + 1];
+                numbers.RemoveAt(i+1);
+
+            }
+        }
+
+        private static void Shift(List<int> numbers, int rotations)
+        {
+            for (int i = 0; i < rotations % numbers.Count; i++)
+            {
+                int first = numbers[0];
+                numbers.RemoveAt(0);
+                numbers.Add(first);
+
+            }
+        }
+
+        private static void AddMany(List<int> numbers, string[] tokens)
+        {
+            int index = int.Parse(tokens[1]);
+            List<int> numbersToAdd = new List<int>();
+            for (int i = 2; i < tokens.Length; i++)
+            {
+                numbersToAdd.Add(int.Parse(tokens[i]));
+            }
+            numbers.InsertRange(index, numbersToAdd);           
+        }
+    }
+}
